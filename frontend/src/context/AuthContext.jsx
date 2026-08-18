@@ -41,8 +41,6 @@ export function AuthProvider({ children }) {
     try {
       if (rt) await authApi.post("/auth/logout", { refresh_token: rt });
     } catch {
-      // Even if the server call fails (e.g. already expired), still
-      // clear local state so the user is logged out client-side.
     }
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
