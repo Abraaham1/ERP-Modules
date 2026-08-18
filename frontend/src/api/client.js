@@ -1,7 +1,12 @@
 import axios from "axios";
 
+// All requests go through the nginx gateway (see infra/nginx/nginx.conf),
+// which routes /api/auth, /api/attendance, /api/payroll to the
+// respective microservice.
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8090";
 
+// Separate un-intercepted client for the refresh call itself, to avoid
+// an infinite loop if the refresh endpoint ever also returned a 401.
 const rawAuthClient = axios.create({ baseURL: `${BASE_URL}/api/auth` });
 
 let refreshPromise = null;
@@ -10,6 +15,8 @@ async function refreshAccessToken() {
   const refreshToken = localStorage.getItem("refresh_token");
   if (!refreshToken) throw new Error("No refresh token available");
 
+  // De-duplicate concurrent refresh attempts (e.g. several requests
+  // failing with 401 at the same moment) into a single network call.
   if (!refreshPromise) {
     refreshPromise = rawAuthClient
       .post("/auth/refresh", { refresh_token: refreshToken })
@@ -49,6 +56,7 @@ function createClient(prefix) {
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
           return client(originalRequest);
         } catch {
+          // Refresh itself failed -- the session is truly over.
           localStorage.removeItem("access_token");
           localStorage.removeItem("refresh_token");
           window.location.href = "/login";

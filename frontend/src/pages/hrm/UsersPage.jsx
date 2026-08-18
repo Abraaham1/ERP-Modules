@@ -69,6 +69,7 @@ export default function UsersPage() {
       await authApi.delete(`/users/${userId}`);
       load();
     } catch {
+      // Row stays visible; user can retry.
     }
   }
 

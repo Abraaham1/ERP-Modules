@@ -9,6 +9,9 @@ from app.db.session import Base, engine
 from app.models import attendance as attendance_model  # noqa: F401
 from app.models import leave as leave_model  # noqa: F401
 
+# app/main.py — auth-service (add this)
+from fastapi.middleware.cors import CORSMiddleware
+
 configure_logging()
 
 
@@ -25,6 +28,14 @@ app.include_router(attendance.router)
 app.include_router(chart.router)
 app.include_router(leave.router)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 @app.get("/health")
 async def health():
     return {"status": "ok", "service": "attendance-service"}
@@ -33,3 +44,4 @@ async def health():
 @app.get("/")
 async def root():
     return {"service": "attendance-service", "message": "Attendance service is running"}
+

@@ -7,6 +7,7 @@ from app.core.logging import configure_logging
 from app.db.session import Base, engine
 
 from app.models import user  
+from fastapi.middleware.cors import CORSMiddleware
 
 configure_logging()
 
@@ -22,6 +23,14 @@ app = FastAPI(title="ERP Auth Service", version="0.1.0", lifespan=lifespan)
 
 app.include_router(auth.router)
 app.include_router(users.router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/health")

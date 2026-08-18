@@ -39,6 +39,7 @@ export default function LeaveInboxPage() {
       });
       load();
     } catch {
+      // Leave the row as-is; a retry is the simplest recovery here.
     } finally {
       setActioningId(null);
     }

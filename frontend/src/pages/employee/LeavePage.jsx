@@ -27,6 +27,7 @@ export default function LeavePage() {
       const res = await attendanceApi.get("/leave/me");
       setRequests(res.data.items);
     } catch {
+      // Non-fatal -- list just stays empty with a subtle message below.
     } finally {
       setLoading(false);
     }
