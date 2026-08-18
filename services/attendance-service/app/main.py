@@ -6,10 +6,9 @@ from app.api import attendance, chart, leave
 from app.core.logging import configure_logging
 from app.db.session import Base, engine
 
-from app.models import attendance as attendance_model  # noqa: F401
-from app.models import leave as leave_model  # noqa: F401
+from app.models import attendance as attendance_model 
+from app.models import leave as leave_model 
 
-# app/main.py — auth-service (add this)
 from fastapi.middleware.cors import CORSMiddleware
 
 configure_logging()
