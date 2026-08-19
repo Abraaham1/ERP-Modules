@@ -27,6 +27,10 @@ export default {
       animation: {
         "fade-in": "fadeIn 0.2s ease-out",
         "slide-up": "slideUp 0.25s ease-out",
+        "node-pulse": "nodePulse 3s ease-in-out infinite",
+        float: "float 7s ease-in-out infinite",
+        shake: "shake 0.4s ease-in-out",
+        "grid-pan": "gridPan 24s linear infinite",
       },
       keyframes: {
         fadeIn: {
@@ -36,6 +40,25 @@ export default {
         slideUp: {
           "0%": { opacity: "0", transform: "translateY(6px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        nodePulse: {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
+        },
+        float: {
+          "0%, 100%": { transform: "translate(0, 0)" },
+          "50%": { transform: "translate(14px, -18px)" },
+        },
+        shake: {
+          "0%, 100%": { transform: "translateX(0)" },
+          "20%": { transform: "translateX(-6px)" },
+          "40%": { transform: "translateX(6px)" },
+          "60%": { transform: "translateX(-4px)" },
+          "80%": { transform: "translateX(4px)" },
+        },
+        gridPan: {
+          "0%": { backgroundPosition: "0 0" },
+          "100%": { backgroundPosition: "40px 40px" },
         },
       },
     },
