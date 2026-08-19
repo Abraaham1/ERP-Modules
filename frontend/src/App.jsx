@@ -9,6 +9,9 @@ import LeavePage from "./pages/employee/LeavePage";
 import PayrollPage from "./pages/employee/PayrollPage";
 import LeaveInboxPage from "./pages/hrm/LeaveInboxPage";
 import UsersPage from "./pages/hrm/UsersPage";
+import HrmHomePage from "./pages/hrm/HrmHomePage";
+import RoleEmployeesPage from "./pages/hrm/RoleEmployeesPage";
+import EmployeeDetailPage from "./pages/hrm/EmployeeDetailPage";
 
 export default function App() {
   return (
@@ -24,10 +27,57 @@ export default function App() {
               </ProtectedRoute>
             }
           >
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/leave" element={<LeavePage />} />
-            <Route path="/payroll" element={<PayrollPage />} />
+            {/* Employee-only personal dashboards */}
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute employeeOnly>
+                  <DashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/leave"
+              element={
+                <ProtectedRoute employeeOnly>
+                  <LeavePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/payroll"
+              element={
+                <ProtectedRoute employeeOnly>
+                  <PayrollPage />
+                </ProtectedRoute>
+              }
+            />
 
+            {/* HRM-only */}
+            <Route
+              path="/hrm"
+              element={
+                <ProtectedRoute hrmOnly>
+                  <HrmHomePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/hrm/roles/:type"
+              element={
+                <ProtectedRoute hrmOnly>
+                  <RoleEmployeesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/hrm/employees/:userId"
+              element={
+                <ProtectedRoute hrmOnly>
+                  <EmployeeDetailPage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/hrm/leave-inbox"
               element={

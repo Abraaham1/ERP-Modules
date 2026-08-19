@@ -19,8 +19,8 @@ function decodeUser(accessToken) {
 }
 
 export function AuthProvider({ children }) {
-  const [accessToken, setAccessToken] = useState(() => localStorage.getItem("access_token"));
-  const [refreshToken, setRefreshToken] = useState(() => localStorage.getItem("refresh_token"));
+  const [accessToken, setAccessToken] = useState(() => sessionStorage.getItem("access_token"));
+  const [refreshToken, setRefreshToken] = useState(() => sessionStorage.getItem("refresh_token"));
 
   const user = useMemo(() => (accessToken ? decodeUser(accessToken) : null), [accessToken]);
 
@@ -28,8 +28,8 @@ export function AuthProvider({ children }) {
     const response = await authApi.post("/auth/login", { email, password });
     const { access_token, refresh_token } = response.data;
 
-    localStorage.setItem("access_token", access_token);
-    localStorage.setItem("refresh_token", refresh_token);
+    sessionStorage.setItem("access_token", access_token);
+    sessionStorage.setItem("refresh_token", refresh_token);
     setAccessToken(access_token);
     setRefreshToken(refresh_token);
 
@@ -37,13 +37,13 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = useCallback(async () => {
-    const rt = localStorage.getItem("refresh_token");
+    const rt = sessionStorage.getItem("refresh_token");
     try {
       if (rt) await authApi.post("/auth/logout", { refresh_token: rt });
     } catch {
     }
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
+    sessionStorage.removeItem("access_token");
+    sessionStorage.removeItem("refresh_token");
     setAccessToken(null);
     setRefreshToken(null);
   }, []);

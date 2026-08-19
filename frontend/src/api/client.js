@@ -7,13 +7,13 @@ const rawAuthClient = axios.create({ baseURL: `${BASE_URL}/api/auth` });
 let refreshPromise = null;
 
 async function refreshAccessToken() {
-  const refreshToken = localStorage.getItem("refresh_token");
+  const refreshToken = sessionStorage.getItem("refresh_token");
   if (!refreshToken) throw new Error("No refresh token available");
   if (!refreshPromise) {
     refreshPromise = rawAuthClient
       .post("/auth/refresh", { refresh_token: refreshToken })
       .then((res) => {
-        localStorage.setItem("access_token", res.data.access_token);
+        sessionStorage.setItem("access_token", res.data.access_token);
         return res.data.access_token;
       })
       .finally(() => {
@@ -29,7 +29,7 @@ function createClient(prefix) {
   });
 
   client.interceptors.request.use((config) => {
-    const token = localStorage.getItem("access_token");
+    const token = sessionStorage.getItem("access_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -48,8 +48,8 @@ function createClient(prefix) {
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
           return client(originalRequest);
         } catch {
-          localStorage.removeItem("access_token");
-          localStorage.removeItem("refresh_token");
+          sessionStorage.removeItem("access_token");
+          sessionStorage.removeItem("refresh_token");
           window.location.href = "/login";
         }
       }

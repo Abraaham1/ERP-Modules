@@ -70,10 +70,10 @@ export default function DashboardPage() {
 
   return (
     <div className="p-8 max-w-4xl">
-      <h1 className="text-2xl font-semibold text-slate-800 mb-6">Dashboard</h1>
+      <h1 className="text-2xl font-bold text-slate-900 mb-6">Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg border border-slate-200 p-6">
+        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-card">
           <h2 className="text-sm font-semibold text-slate-700 mb-4">Log Attendance</h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -84,7 +84,7 @@ export default function DashboardPage() {
                 value={workDate}
                 max={todayIso()}
                 onChange={(e) => setWorkDate(e.target.value)}
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
               />
             </div>
 
@@ -96,9 +96,9 @@ export default function DashboardPage() {
                     type="button"
                     key={opt.value}
                     onClick={() => setStatus(opt.value)}
-                    className={`flex-1 text-sm rounded-md px-3 py-2 border transition-colors ${
+                    className={`flex-1 text-sm rounded-lg px-3 py-2 border transition-colors ${
                       status === opt.value
-                        ? "bg-blue-600 text-white border-blue-600"
+                        ? "bg-brand-600 text-white border-brand-600"
                         : "bg-white text-slate-600 border-slate-300 hover:bg-slate-50"
                     }`}
                   >
@@ -110,7 +110,7 @@ export default function DashboardPage() {
 
             {message && (
               <div
-                className={`text-sm rounded-md px-3 py-2 border ${
+                className={`text-sm rounded-lg px-3 py-2 border ${
                   message.type === "success"
                     ? "text-green-700 bg-green-50 border-green-200"
                     : "text-red-600 bg-red-50 border-red-200"
@@ -123,14 +123,14 @@ export default function DashboardPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white text-sm font-medium rounded-md px-4 py-2 transition-colors"
+              className="w-full bg-brand-600 hover:bg-brand-700 disabled:bg-brand-300 text-white text-sm font-medium rounded-lg px-4 py-2 transition-colors"
             >
               {submitting ? "Saving..." : "Log Attendance"}
             </button>
           </form>
         </div>
 
-        <div className="bg-white rounded-lg border border-slate-200 p-6">
+        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-card">
           <h2 className="text-sm font-semibold text-slate-700 mb-4">
             This Month's Attendance
           </h2>

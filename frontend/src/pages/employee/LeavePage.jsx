@@ -27,7 +27,6 @@ export default function LeavePage() {
       const res = await attendanceApi.get("/leave/me");
       setRequests(res.data.items);
     } catch {
-      // Non-fatal -- list just stays empty with a subtle message below.
     } finally {
       setLoading(false);
     }
@@ -59,9 +58,9 @@ export default function LeavePage() {
 
   return (
     <div className="p-8 max-w-4xl">
-      <h1 className="text-2xl font-semibold text-slate-800 mb-6">Leave</h1>
+      <h1 className="text-2xl font-bold text-slate-900 mb-6">Leave</h1>
 
-      <div className="bg-white rounded-lg border border-slate-200 p-6 mb-6">
+      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-card mb-6">
         <h2 className="text-sm font-semibold text-slate-700 mb-4">Apply for Leave</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -73,7 +72,7 @@ export default function LeavePage() {
                 required
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
               />
             </div>
             <div>
@@ -84,7 +83,7 @@ export default function LeavePage() {
                 value={endDate}
                 min={startDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
               />
             </div>
           </div>
@@ -96,14 +95,14 @@ export default function LeavePage() {
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               rows={3}
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
               placeholder="Let HRM know why you're requesting leave"
             />
           </div>
 
           {message && (
             <div
-              className={`text-sm rounded-md px-3 py-2 border ${
+              className={`text-sm rounded-lg px-3 py-2 border ${
                 message.type === "success"
                   ? "text-green-700 bg-green-50 border-green-200"
                   : "text-red-600 bg-red-50 border-red-200"
@@ -116,14 +115,14 @@ export default function LeavePage() {
           <button
             type="submit"
             disabled={submitting}
-            className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white text-sm font-medium rounded-md px-4 py-2 transition-colors"
+            className="bg-brand-600 hover:bg-brand-700 disabled:bg-brand-300 text-white text-sm font-medium rounded-lg px-4 py-2 transition-colors"
           >
             {submitting ? "Submitting..." : "Submit Request"}
           </button>
         </form>
       </div>
 
-      <div className="bg-white rounded-lg border border-slate-200 p-6">
+      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-card">
         <h2 className="text-sm font-semibold text-slate-700 mb-4">My Requests</h2>
 
         {loading && <p className="text-sm text-slate-500">Loading...</p>}
@@ -136,7 +135,7 @@ export default function LeavePage() {
             {requests.map((r) => (
               <div
                 key={r.id}
-                className="flex items-center justify-between border border-slate-200 rounded-md px-4 py-3"
+                className="flex items-center justify-between border border-slate-200 rounded-lg px-4 py-3"
               >
                 <div>
                   <p className="text-sm font-medium text-slate-800">

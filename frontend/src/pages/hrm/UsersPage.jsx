@@ -1,16 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { authApi } from "../../api/client";
+import Avatar from "../../components/Avatar";
+import EmployeeTypeBadge from "../../components/EmployeeTypeBadge";
 
 const EMPLOYEE_TYPES = [
-  "swe",
-  "ml_engineer",
-  "devops_engineer",
-  "sqa",
-  "db_analyst",
-  "backend_dev",
-  "frontend_dev",
-  "cto",
-  "cpdo",
+  "swe", "ml_engineer", "devops_engineer", "sqa", "db_analyst",
+  "backend_dev", "frontend_dev", "cto", "cpdo",
 ];
 
 const emptyForm = {
@@ -69,26 +64,28 @@ export default function UsersPage() {
       await authApi.delete(`/users/${userId}`);
       load();
     } catch {
-      // Row stays visible; user can retry.
     }
   }
 
   return (
     <div className="p-8 max-w-4xl">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-slate-800">Users</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Users</h1>
+          <p className="text-sm text-slate-500 mt-1">Manage employee and HRM accounts</p>
+        </div>
         <button
           onClick={() => setShowForm((v) => !v)}
-          className="text-sm font-medium px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white transition-colors"
+          className="text-sm font-medium px-4 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white shadow-sm transition-colors"
         >
-          {showForm ? "Cancel" : "New User"}
+          {showForm ? "Cancel" : "+ New User"}
         </button>
       </div>
 
       {showForm && (
         <form
           onSubmit={handleCreate}
-          className="bg-white rounded-lg border border-slate-200 p-6 mb-6 space-y-4"
+          className="bg-white rounded-xl border border-slate-200 p-6 mb-6 space-y-4 shadow-card animate-slide-up"
         >
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -98,7 +95,7 @@ export default function UsersPage() {
                 required
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
               />
             </div>
             <div>
@@ -108,7 +105,7 @@ export default function UsersPage() {
                 required
                 value={form.full_name}
                 onChange={(e) => setForm({ ...form, full_name: e.target.value })}
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
               />
             </div>
             <div>
@@ -119,7 +116,7 @@ export default function UsersPage() {
                 minLength={8}
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
               />
             </div>
             <div>
@@ -127,7 +124,7 @@ export default function UsersPage() {
               <select
                 value={form.role}
                 onChange={(e) => setForm({ ...form, role: e.target.value })}
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
               >
                 <option value="employee">Employee</option>
                 <option value="hrm">HRM</option>
@@ -139,7 +136,7 @@ export default function UsersPage() {
                 <select
                   value={form.employee_type}
                   onChange={(e) => setForm({ ...form, employee_type: e.target.value })}
-                  className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                 >
                   {EMPLOYEE_TYPES.map((t) => (
                     <option key={t} value={t}>
@@ -152,7 +149,7 @@ export default function UsersPage() {
           </div>
 
           {error && (
-            <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
+            <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
               {error}
             </div>
           )}
@@ -160,7 +157,7 @@ export default function UsersPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="text-sm font-medium px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white transition-colors"
+            className="text-sm font-medium px-4 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 disabled:bg-brand-300 text-white transition-colors"
           >
             {submitting ? "Creating..." : "Create User"}
           </button>
@@ -170,36 +167,29 @@ export default function UsersPage() {
       {loading && <p className="text-sm text-slate-500">Loading...</p>}
 
       {!loading && (
-        <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
-          <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wide">
-              <tr>
-                <th className="text-left px-4 py-2 font-medium">Name</th>
-                <th className="text-left px-4 py-2 font-medium">Email</th>
-                <th className="text-left px-4 py-2 font-medium">Role</th>
-                <th className="text-left px-4 py-2 font-medium">Type</th>
-                <th className="px-4 py-2"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {users.map((u) => (
-                <tr key={u.id}>
-                  <td className="px-4 py-2 text-slate-800">{u.full_name}</td>
-                  <td className="px-4 py-2 text-slate-600">{u.email}</td>
-                  <td className="px-4 py-2 text-slate-600">{u.role}</td>
-                  <td className="px-4 py-2 text-slate-600">{u.employee_type || "—"}</td>
-                  <td className="px-4 py-2 text-right">
-                    <button
-                      onClick={() => handleDeactivate(u.id)}
-                      className="text-xs font-medium text-red-600 hover:text-red-700"
-                    >
-                      Deactivate
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="space-y-2">
+          {users.map((u) => (
+            <div
+              key={u.id}
+              className="flex items-center gap-4 bg-white rounded-xl border border-slate-200 p-4 shadow-card"
+            >
+              <Avatar name={u.full_name} />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-slate-800">{u.full_name}</p>
+                <p className="text-xs text-slate-500">{u.email}</p>
+              </div>
+              <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 capitalize">
+                {u.role}
+              </span>
+              {u.employee_type && <EmployeeTypeBadge type={u.employee_type} />}
+              <button
+                onClick={() => handleDeactivate(u.id)}
+                className="text-xs font-medium text-red-600 hover:text-red-700 shrink-0"
+              >
+                Deactivate
+              </button>
+            </div>
+          ))}
         </div>
       )}
     </div>
