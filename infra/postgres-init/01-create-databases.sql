@@ -1,6 +1,3 @@
--- Runs once on first container start (docker-entrypoint-initdb.d).
--- Creates a separate database per microservice, matching the
--- "separate DBs" requirement in the ERP Modules spec.
 
 CREATE DATABASE auth_db;
 CREATE DATABASE attendance_db;
