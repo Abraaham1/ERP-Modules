@@ -16,7 +16,7 @@ async def send_password_reset_email(to_email: str, reset_link: str) -> None:
 
     if not settings.supabase_url or not settings.supabase_service_role_key:
         raise SupabaseEmailError(
-            "Supabase is not configured (SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY missing)"
+            "Supabase is not configured"
         )
 
     admin_headers = {
