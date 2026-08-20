@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import OrbitHub from "../components/OrbitHub";
 
@@ -143,6 +143,15 @@ export default function LoginPage() {
                 >
                   <EyeIcon open={showPassword} />
                 </button>
+              </div>
+
+              <div className="flex justify-end -mt-1">
+                <Link
+                  to="/forgot-password"
+                  className="text-xs font-medium text-brand-600 hover:text-brand-700 transition-colors"
+                >
+                  Forgot password?
+                </Link>
               </div>
 
               {error && (

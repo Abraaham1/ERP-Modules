@@ -9,6 +9,7 @@ node_modules/
 # Env files with secrets
 .env
 services/*/.env
+services/auth-service/.env
 
 # OS
 .DS_Store
