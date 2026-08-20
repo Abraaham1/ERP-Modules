@@ -66,7 +66,7 @@ export default function LeaveInboxPage() {
   }
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 md:p-8 max-w-4xl">
       <h1 className="text-2xl font-bold text-slate-900 mb-1">Leave Inbox</h1>
       <p className="text-sm text-slate-500 mb-6">Review and respond to employee leave requests</p>
 
@@ -101,17 +101,17 @@ export default function LeaveInboxPage() {
           return (
             <div
               key={r.id}
-              className="bg-white rounded-xl border border-slate-200 p-5 shadow-card animate-slide-up"
+              className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-card animate-slide-up"
             >
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="flex items-start gap-3 min-w-0">
                   <Avatar name={displayName} size="sm" />
                   <div className="min-w-0">
-                    <p className="text-sm font-semibold text-slate-800">{displayName}</p>
+                    <p className="text-sm font-semibold text-slate-800 truncate">{displayName}</p>
                     <p className="text-xs text-slate-500">
                       {r.start_date} → {r.end_date}
                     </p>
-                    <p className="text-sm text-slate-600 mt-2">{r.reason}</p>
+                    <p className="text-sm text-slate-600 mt-2 break-words">{r.reason}</p>
                   </div>
                 </div>
 
@@ -123,7 +123,7 @@ export default function LeaveInboxPage() {
               </div>
 
               {tab === "pending" && (
-                <div className="mt-4 flex items-center gap-2 pl-11">
+                <div className="mt-4 flex flex-col sm:flex-row sm:items-center gap-2 sm:pl-11">
                   <input
                     type="text"
                     placeholder="Optional note"
@@ -131,25 +131,27 @@ export default function LeaveInboxPage() {
                     onChange={(e) => setNoteDrafts((prev) => ({ ...prev, [r.id]: e.target.value }))}
                     className="flex-1 rounded-lg border border-slate-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent"
                   />
-                  <button
-                    onClick={() => handleReview(r.id, true)}
-                    disabled={actioningId === r.id}
-                    className="text-sm font-medium px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white transition-colors"
-                  >
-                    Approve
-                  </button>
-                  <button
-                    onClick={() => handleReview(r.id, false)}
-                    disabled={actioningId === r.id}
-                    className="text-sm font-medium px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 disabled:bg-red-300 text-white transition-colors"
-                  >
-                    Reject
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleReview(r.id, true)}
+                      disabled={actioningId === r.id}
+                      className="flex-1 sm:flex-none text-sm font-medium px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-300 text-white transition-colors"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      onClick={() => handleReview(r.id, false)}
+                      disabled={actioningId === r.id}
+                      className="flex-1 sm:flex-none text-sm font-medium px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 disabled:bg-red-300 text-white transition-colors"
+                    >
+                      Reject
+                    </button>
+                  </div>
                 </div>
               )}
 
               {r.review_note && (
-                <p className="text-xs text-slate-400 mt-2 pl-11">Note: {r.review_note}</p>
+                <p className="text-xs text-slate-400 mt-2 sm:pl-11 break-words">Note: {r.review_note}</p>
               )}
             </div>
           );

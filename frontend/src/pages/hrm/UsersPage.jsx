@@ -68,15 +68,15 @@ export default function UsersPage() {
   }
 
   return (
-    <div className="p-8 max-w-4xl">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-4 md:p-8 max-w-4xl">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Users</h1>
           <p className="text-sm text-slate-500 mt-1">Manage employee and HRM accounts</p>
         </div>
         <button
           onClick={() => setShowForm((v) => !v)}
-          className="text-sm font-medium px-4 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white shadow-sm transition-colors"
+          className="self-start sm:self-auto text-sm font-medium px-4 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white shadow-sm transition-colors"
         >
           {showForm ? "Cancel" : "+ New User"}
         </button>
@@ -85,9 +85,9 @@ export default function UsersPage() {
       {showForm && (
         <form
           onSubmit={handleCreate}
-          className="bg-white rounded-xl border border-slate-200 p-6 mb-6 space-y-4 shadow-card animate-slide-up"
+          className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 mb-6 space-y-4 shadow-card animate-slide-up"
         >
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm text-slate-600 mb-1">Email</label>
               <input
@@ -171,23 +171,25 @@ export default function UsersPage() {
           {users.map((u) => (
             <div
               key={u.id}
-              className="flex items-center gap-4 bg-white rounded-xl border border-slate-200 p-4 shadow-card"
+              className="flex flex-wrap items-center gap-x-4 gap-y-2 bg-white rounded-xl border border-slate-200 p-4 shadow-card"
             >
               <Avatar name={u.full_name} />
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-slate-800">{u.full_name}</p>
-                <p className="text-xs text-slate-500">{u.email}</p>
+              <div className="flex-1 min-w-[140px]">
+                <p className="text-sm font-semibold text-slate-800 truncate">{u.full_name}</p>
+                <p className="text-xs text-slate-500 truncate">{u.email}</p>
               </div>
-              <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 capitalize">
-                {u.role}
-              </span>
-              {u.employee_type && <EmployeeTypeBadge type={u.employee_type} />}
-              <button
-                onClick={() => handleDeactivate(u.id)}
-                className="text-xs font-medium text-red-600 hover:text-red-700 shrink-0"
-              >
-                Deactivate
-              </button>
+              <div className="flex flex-wrap items-center gap-2 ml-auto sm:ml-0">
+                <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 capitalize">
+                  {u.role}
+                </span>
+                {u.employee_type && <EmployeeTypeBadge type={u.employee_type} />}
+                <button
+                  onClick={() => handleDeactivate(u.id)}
+                  className="text-xs font-medium text-red-600 hover:text-red-700 shrink-0"
+                >
+                  Deactivate
+                </button>
+              </div>
             </div>
           ))}
         </div>

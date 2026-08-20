@@ -29,7 +29,7 @@ export default function PayrollPage() {
   }, [load]);
 
   return (
-    <div className="p-8 max-w-2xl">
+    <div className="p-4 md:p-8 max-w-2xl">
       <h1 className="text-2xl font-bold text-slate-900 mb-6">Payroll</h1>
 
       {loading && <p className="text-sm text-slate-500">Loading...</p>}
@@ -40,13 +40,13 @@ export default function PayrollPage() {
       )}
 
       {!loading && !error && summary && (
-        <div className="bg-gradient-to-br from-brand-600 to-brand-700 rounded-xl p-8 text-white shadow-sm">
+        <div className="bg-gradient-to-br from-brand-600 to-brand-700 rounded-xl p-5 sm:p-8 text-white shadow-sm">
           <p className="text-brand-100 text-sm font-medium mb-1">
             Salary so far this month ({summary.year}-{String(summary.month).padStart(2, "0")})
           </p>
-          <p className="text-4xl font-bold mb-6">{formatCurrency(summary.salary_so_far)}</p>
+          <p className="text-3xl sm:text-4xl font-bold mb-6">{formatCurrency(summary.salary_so_far)}</p>
 
-          <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/20 text-sm">
+          <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-4 border-t border-white/20 text-sm">
             <div>
               <p className="text-brand-100">Fixed Salary</p>
               <p className="font-semibold">{formatCurrency(summary.fixed_salary)}</p>

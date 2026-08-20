@@ -150,7 +150,7 @@ export default function EmployeeDetailPage() {
   }
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 md:p-8 max-w-4xl">
       {/* Back button */}
       <button
         onClick={() => navigate(-1)}
@@ -192,12 +192,12 @@ export default function EmployeeDetailPage() {
           </div>
 
 
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
             <h2 className="text-sm font-semibold text-slate-700">
               Monthly Summary
             </h2>
 
-            <div className="flex items-center gap-3 bg-white border border-slate-200 rounded-lg px-2 py-1">
+            <div className="flex items-center gap-3 bg-white border border-slate-200 rounded-lg px-2 py-1 self-start sm:self-auto">
               <button
                 onClick={() => shiftMonth(-1)}
                 className="text-slate-400 hover:text-slate-600 px-1"
@@ -271,16 +271,16 @@ export default function EmployeeDetailPage() {
           )}
 
           {salary && (
-            <div className="bg-gradient-to-br from-brand-600 to-brand-700 rounded-xl p-8 text-white shadow-card">
+            <div className="bg-gradient-to-br from-brand-600 to-brand-700 rounded-xl p-5 sm:p-8 text-white shadow-card">
               <p className="text-brand-100 text-sm font-medium mb-1">
                 Salary this month
               </p>
 
-              <p className="text-4xl font-bold mb-6">
+              <p className="text-3xl sm:text-4xl font-bold mb-6">
                 {formatCurrency(salary.salary_so_far)}
               </p>
 
-              <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/20 text-sm">
+              <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-4 border-t border-white/20 text-sm">
                 <div>
                   <p className="text-brand-100">Fixed Salary</p>
                   <p className="font-semibold">

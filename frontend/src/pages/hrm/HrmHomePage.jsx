@@ -47,7 +47,7 @@ export default function HrmHomePage() {
   }, [users]);
 
   return (
-    <div className="p-8 max-w-6xl">
+    <div className="p-4 md:p-8 max-w-6xl">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-slate-900">Team Overview</h1>
         <p className="text-sm text-slate-500 mt-1">

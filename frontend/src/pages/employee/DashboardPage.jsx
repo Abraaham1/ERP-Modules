@@ -69,7 +69,7 @@ export default function DashboardPage() {
   const pieData = chartData?.slices.filter((s) => s.value > 0) ?? [];
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 md:p-8 max-w-4xl">
       <h1 className="text-2xl font-bold text-slate-900 mb-6">Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

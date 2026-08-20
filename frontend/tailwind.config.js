@@ -31,8 +31,13 @@ export default {
         float: "float 7s ease-in-out infinite",
         shake: "shake 0.4s ease-in-out",
         "grid-pan": "gridPan 24s linear infinite",
+        "slide-in-left": "slideInLeft 0.2s ease-out",
       },
       keyframes: {
+        slideInLeft: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
         fadeIn: {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },

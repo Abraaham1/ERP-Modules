@@ -34,7 +34,7 @@ export default function RoleEmployeesPage() {
   }, [users, search]);
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 md:p-8 max-w-4xl">
       <button
         onClick={() => navigate("/hrm")}
         className="text-sm text-slate-500 hover:text-slate-700 mb-4 inline-flex items-center gap-1"

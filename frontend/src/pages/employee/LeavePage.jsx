@@ -57,14 +57,14 @@ export default function LeavePage() {
   }
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 md:p-8 max-w-4xl">
       <h1 className="text-2xl font-bold text-slate-900 mb-6">Leave</h1>
 
-      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-card mb-6">
+      <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-card mb-6">
         <h2 className="text-sm font-semibold text-slate-700 mb-4">Apply for Leave</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm text-slate-600 mb-1">Start date</label>
               <input
@@ -122,7 +122,7 @@ export default function LeavePage() {
         </form>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-card">
+      <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6 shadow-card">
         <h2 className="text-sm font-semibold text-slate-700 mb-4">My Requests</h2>
 
         {loading && <p className="text-sm text-slate-500">Loading...</p>}
@@ -135,19 +135,19 @@ export default function LeavePage() {
             {requests.map((r) => (
               <div
                 key={r.id}
-                className="flex items-center justify-between border border-slate-200 rounded-lg px-4 py-3"
+                className="flex flex-wrap items-start justify-between gap-2 border border-slate-200 rounded-lg px-4 py-3"
               >
-                <div>
+                <div className="min-w-0">
                   <p className="text-sm font-medium text-slate-800">
                     {r.start_date} → {r.end_date}
                   </p>
-                  <p className="text-xs text-slate-500 mt-0.5">{r.reason}</p>
+                  <p className="text-xs text-slate-500 mt-0.5 break-words">{r.reason}</p>
                   {r.review_note && (
-                    <p className="text-xs text-slate-400 mt-0.5">HRM note: {r.review_note}</p>
+                    <p className="text-xs text-slate-400 mt-0.5 break-words">HRM note: {r.review_note}</p>
                   )}
                 </div>
                 <span
-                  className={`text-xs font-medium px-2 py-1 rounded-full border ${STATUS_STYLES[r.status]}`}
+                  className={`shrink-0 text-xs font-medium px-2 py-1 rounded-full border ${STATUS_STYLES[r.status]}`}
                 >
                   {r.status}
                 </span>
