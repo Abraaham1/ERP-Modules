@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     # RabbitMQ
     rabbitmq_url: str = "amqp://erp_admin:erp_password@rabbitmq:5672/"
     
-    jwt_secret_key: str = "change-me-in-production"
+    jwt_secret_key: str = "ABD123"
     jwt_algorithm: str = "HS256"
 
     half_days_per_absent: int = 3

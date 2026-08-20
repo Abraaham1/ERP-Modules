@@ -22,9 +22,6 @@ class Settings(BaseSettings):
     password_reset_token_expire_minutes: int = 60
     frontend_base_url: str = "http://localhost:5173"
 
-    # Supabase -- used ONLY to deliver the reset email via Supabase
-    # Auth's built-in recovery flow. Our own auth (login, JWT issuing,
-    # RBAC) is completely separate and never talks to Supabase.
     supabase_url: str = ""
     supabase_service_role_key: str = ""
 

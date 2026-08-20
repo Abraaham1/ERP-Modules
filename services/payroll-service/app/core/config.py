@@ -27,7 +27,7 @@ class Settings(BaseSettings):
 
     rabbitmq_url: str = "amqp://erp_admin:erp_password@rabbitmq:5672/"
 
-    jwt_secret_key: str = "admin123"
+    jwt_secret_key: str = "ABD123"
     jwt_algorithm: str = "HS256"
 
     attendance_service_url: str = "http://attendance-service:8000"

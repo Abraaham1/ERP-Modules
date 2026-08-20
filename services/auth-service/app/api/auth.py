@@ -120,13 +120,7 @@ async def forgot_password(
     background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_db),
 ):
-    """
-    Always returns 202 regardless of whether the email exists -- this
-    prevents the endpoint from being usable to enumerate registered
-    emails. Our own reset token is generated here; Supabase is only
-    used in the background to deliver the email, so the request
-    doesn't block on that network call either.
-    """
+
     result = await db.execute(select(User).where(User.email == payload.email))
     user = result.scalar_one_or_none()
 
@@ -180,9 +174,6 @@ async def reset_password(payload: ResetPasswordRequest, db: AsyncSession = Depen
     user.hashed_password = hash_password(payload.new_password)
     reset_row.used = True
 
-    # Revoke all existing refresh tokens -- a password reset should end
-    # every other logged-in session, not just let the old password's
-    # sessions keep working.
     revoke_result = await db.execute(
         select(RefreshToken).where(RefreshToken.user_id == user.id, RefreshToken.revoked.is_(False))
     )
