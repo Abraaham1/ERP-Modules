@@ -12,7 +12,7 @@ from app.core.hashing import hash_password, verify_password
 from app.core.logging import get_logger
 from app.core.rate_limit import check_login_rate_limit, reset_login_rate_limit
 from app.core.security import create_access_token, create_refresh_token, decode_token
-from app.core.supabase_email import send_password_reset_email
+from app.core.email import send_password_reset_email
 from app.core.user_cache import invalidate_cached_user
 from app.db.session import get_db
 from app.models.user import PasswordResetToken, RefreshToken, User
@@ -142,7 +142,7 @@ async def forgot_password(
             try:
                 await send_password_reset_email(user.email, reset_link)
             except Exception:
-                logger.exception("Failed to send password reset email via Supabase to=%s", user.email)
+                logger.exception("Failed to send password reset email to=%s", user.email)
 
         background_tasks.add_task(_send)
         logger.info("Password reset requested user_id=%s", user.id)

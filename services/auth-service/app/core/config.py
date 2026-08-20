@@ -22,7 +22,14 @@ class Settings(BaseSettings):
     password_reset_token_expire_minutes: int = 60
     frontend_base_url: str = "http://localhost:5173"
 
-    supabase_url: str = ""
-    supabase_service_role_key: str = ""
+    # SMTP (used to deliver the password reset email directly; no third-party
+    # auth/redirect flow is involved -- see PasswordResetToken docstring)
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_username: str = ""
+    smtp_password: str = ""
+    smtp_use_tls: bool = True
+    smtp_from_email: str = "no-reply@erp-modules.local"
+    smtp_from_name: str = "ERP Modules"
 
 settings = Settings()
