@@ -1,19 +1,47 @@
 # Python
 .venv/
+venv/
 __pycache__/
 *.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
-# Node
+# Alembic (SQLAlchemy migrations) — if you ever generate local sqlite dbs for testing
+*.sqlite3
+*.db
+
+# Node / frontend
 node_modules/
+frontend/dist/
+frontend/.vite/
+*.local
 
 # Env files with secrets
 .env
+.env.*
+!.env.example
 services/*/.env
 services/auth-service/.env
+
+# Docker
+*.pid
+
+# Logs
+*.log
 
 # OS
 .DS_Store
 Thumbs.db
 
+# Editors
+.idea/
+.vscode/
+*.swp
+
 # Credentials and secrets
 creds.txt
+*.pem
+*.key

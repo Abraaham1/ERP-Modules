@@ -1,34 +1,3 @@
-"""
-RabbitMQ wrapper for the password-reset email flow.
-
-Topology (declared idempotently on startup / first use):
-
-    erp.events                          topic exchange, durable
-    auth.email_worker                   durable queue, bound to routing key
-                                         "auth.password_reset_requested"
-    auth.email_worker.retry             durable queue, x-message-ttl backoff,
-                                         dead-letters back into erp.events
-    erp.events.dlx                      fanout exchange, durable
-    auth.email_worker.dlq               durable queue bound to the DLX
-
-Why this exists: the forgot-password endpoint used to send the email inline
-via FastAPI's BackgroundTasks, which runs in the same process as the API. A
-slow or unreachable SMTP server would tie up that worker process, and a
-failed send only produced a log line -- nothing retried it. Publishing an
-event and letting a separate worker process consume it means:
-
-  - the API request returns as soon as the token is saved, never waiting
-    on SMTP
-  - a stuck/slow SMTP call blocks the email worker only, never the API
-  - a failed send is retried automatically (with backoff) instead of
-    silently dying, and after MAX_DELIVERY_ATTEMPTS lands in a DLQ for
-    manual inspection instead of being lost
-
-This is intentionally scoped to just this one flow -- the rest of the
-system (payroll <-> attendance <-> auth) is synchronous request/response
-by requirement, not by oversight, so it isn't queued.
-"""
-
 import asyncio
 import json
 from collections.abc import Awaitable, Callable
@@ -46,10 +15,8 @@ logger = get_logger("core.rabbitmq")
 EVENTS_EXCHANGE = "erp.events"
 DLX_EXCHANGE = "erp.events.dlx"
 
-# Redeliver a failed message this many times before it's routed to the DLQ.
 MAX_DELIVERY_ATTEMPTS = 3
 
-# Delay before a failed message is retried (milliseconds).
 RETRY_DELAY_MS = 10_000
 
 _connection: AbstractRobustConnection | None = None
@@ -76,15 +43,6 @@ async def _get_publish_channel() -> aio_pika.abc.AbstractChannel:
 
 
 async def publish_event(routing_key: str, payload: dict[str, Any]) -> None:
-    """
-    Publish an event to the erp.events topic exchange, with publisher
-    confirms enabled so we know the broker actually accepted it.
-
-    Callers should treat this as best-effort and not let a publish failure
-    block the underlying DB transaction that triggered the event -- catch
-    and log, don't raise, if the caller shouldn't fail the HTTP request
-    just because the broker publish hiccuped.
-    """
     channel = await _get_publish_channel()
     exchange = await channel.get_exchange(EVENTS_EXCHANGE)
 
@@ -118,19 +76,6 @@ async def consume(
     handler: Handler,
     prefetch_count: int = 10,
 ) -> None:
-    """
-    Declare `queue_name`, bind it to `routing_keys` on erp.events, and consume
-    forever, calling `handler(payload)` for each message.
-
-    Failed messages go to a per-queue retry queue with a TTL (backoff delay);
-    when the TTL expires they're dead-lettered back into the original queue
-    for another attempt. After MAX_DELIVERY_ATTEMPTS the message is rejected
-    without requeue and lands in "<queue_name>.dlq" for manual inspection --
-    it is never silently dropped and never redelivered forever.
-
-    Intended to run in a standalone worker process (see app/worker.py), not
-    inside the FastAPI request/response cycle.
-    """
     conn = await get_connection()
     channel = await conn.channel()
     await channel.set_qos(prefetch_count=prefetch_count)
@@ -159,9 +104,6 @@ async def consume(
     for key in routing_keys:
         await queue.bind(events_exchange, routing_key=key)
 
-    # Retry queue: holds messages for RETRY_DELAY_MS, then TTL expiry dead-letters
-    # them back into erp.events with their original routing key, which routes them
-    # straight back into `queue` since it's still bound to that key.
     retry_queue_name = f"{queue_name}.retry"
     retry_queue = await channel.declare_queue(
         retry_queue_name,
@@ -217,12 +159,11 @@ async def consume(
                     ),
                     routing_key=retry_queue_name,
                 )
-                await message.ack()  # remove from main queue; it now lives in retry queue
+                await message.ack() 
             return
 
         await message.ack()
 
     await queue.consume(_on_message)
 
-    # Block forever; the worker process's entrypoint awaits this.
     await asyncio.Future()

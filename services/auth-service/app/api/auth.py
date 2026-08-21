@@ -144,9 +144,6 @@ async def forgot_password(
                 {"email": user.email, "reset_link": reset_link},
             )
         except Exception:
-            # Best-effort: the reset token is already committed, so don't fail
-            # the request just because the broker publish hiccuped. Logged so
-            # it's visible if RabbitMQ is down.
             logger.exception("Failed to publish password reset event user_id=%s", user.id)
 
         logger.info("Password reset requested user_id=%s", user.id)
