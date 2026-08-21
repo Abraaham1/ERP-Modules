@@ -29,7 +29,7 @@ app.include_router(users.router)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://192.168.1.66:5173",
+        "http://192.168.2.35:5173",
         "http://localhost:5173",
     ],
     allow_credentials=True,
