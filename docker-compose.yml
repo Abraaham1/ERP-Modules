@@ -113,6 +113,26 @@ services:
     volumes:
       - ./services/auth-service:/app
 
+  auth-email-worker:
+    build:
+      context: ./services/auth-service
+    container_name: erp-auth-email-worker
+    restart: unless-stopped
+    command: python -m app.worker
+    env_file:
+      - ./services/auth-service/.env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-erp_admin}:${POSTGRES_PASSWORD:-erp_password}@postgres:5432/auth_db
+      REDIS_URL: redis://redis:6379/0
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-erp_admin}:${RABBITMQ_PASSWORD:-erp_password}@rabbitmq:5672/
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - erp-net
+    volumes:
+      - ./services/auth-service:/app
+
   attendance-service:
     build:
       context: ./services/attendance-service

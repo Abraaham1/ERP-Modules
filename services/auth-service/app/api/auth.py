@@ -2,7 +2,7 @@ import secrets
 import uuid
 from datetime import datetime, timedelta, timezone
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -10,11 +10,12 @@ from app.api.deps import get_current_user
 from app.core.config import settings
 from app.core.hashing import hash_password, verify_password
 from app.core.logging import get_logger
+from app.core.rabbitmq import publish_event
 from app.core.rate_limit import check_login_rate_limit, reset_login_rate_limit
 from app.core.security import create_access_token, create_refresh_token, decode_token
-from app.core.email import send_password_reset_email
 from app.core.user_cache import invalidate_cached_user
 from app.db.session import get_db
+from app.events.routing_keys import PASSWORD_RESET_REQUESTED
 from app.models.user import PasswordResetToken, RefreshToken, User
 from app.schemas.user import (
     AccessToken,
@@ -117,7 +118,6 @@ async def get_me(current_user: User = Depends(get_current_user)):
 @router.post("/forgot-password", status_code=status.HTTP_202_ACCEPTED)
 async def forgot_password(
     payload: ForgotPasswordRequest,
-    background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_db),
 ):
 
@@ -138,13 +138,17 @@ async def forgot_password(
 
         reset_link = f"{settings.frontend_base_url}/reset-password?token={raw_token}"
 
-        async def _send():
-            try:
-                await send_password_reset_email(user.email, reset_link)
-            except Exception:
-                logger.exception("Failed to send password reset email to=%s", user.email)
+        try:
+            await publish_event(
+                PASSWORD_RESET_REQUESTED,
+                {"email": user.email, "reset_link": reset_link},
+            )
+        except Exception:
+            # Best-effort: the reset token is already committed, so don't fail
+            # the request just because the broker publish hiccuped. Logged so
+            # it's visible if RabbitMQ is down.
+            logger.exception("Failed to publish password reset event user_id=%s", user.id)
 
-        background_tasks.add_task(_send)
         logger.info("Password reset requested user_id=%s", user.id)
     else:
         logger.info("Password reset requested for unknown/inactive email (no email sent)")

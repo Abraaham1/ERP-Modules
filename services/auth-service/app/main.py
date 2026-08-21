@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.api import auth, users
+from app.core import rabbitmq
 from app.core.logging import configure_logging
 from app.db.session import Base, engine
 
@@ -17,6 +18,7 @@ async def lifespan(app: FastAPI):
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield
+    await rabbitmq.close()
 
 
 app = FastAPI(title="ERP Auth Service", version="0.1.0", lifespan=lifespan)
